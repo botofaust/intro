@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import axios from 'axios';
 import './App.css';
 
 import BrowserPosition from './BrowserPosition';
+import Weather from './Weather';
 
 const TextInput = React.forwardRef(({ name, onChange }, ref) => (
   <input type="text" ref={ref} name={name} onChange={onChange}/>
@@ -11,42 +11,32 @@ const TextInput = React.forwardRef(({ name, onChange }, ref) => (
 class App extends Component {
   constructor(props){
     super(props);
-    this.positionRef = React.createRef();
-    this.refGetPosition = React.createRef();
+    this.refWeather = React.createRef();
+    this.refBrowserPosition = React.createRef();
   }
 
   state = {
     textInput: "",
   }
 
-  requestGismeteoPosition = () => {
-    const geocodingAPI = 'http://api.openweathermap.org/geo/1.0/direct?q=' + this.positionRef.current.value + '&limit=5&appid=4f145577e286f86edf377185d8af97c2';
-    axios.get(geocodingAPI)
-        .then(res => {
-          console.log(res);
-          let result = '';
-          for (let r of res.data) {
-            console.log(r);
-            result += r.country + ' ' + r.state + '\n';
-          };
-          this.setState({ textInput: result });
-          console.log(result);
-        })
-        .catch(err => {
-          // this.setState({ textInput: err.message, });
-        })
+  magic = () => {
+    const pos = this.refBrowserPosition.current.state;
+    console.log(pos);
+    this.refWeather.current.setCoords({latitude: pos.latitude, longitude: pos.longitude});
+    this.refWeather.current.callOpenWeather();
   }
   
   getBrowserPosition = () => {
-    this.refGetPosition.current.getPosition();
+    this.refBrowserPosition.current.getPosition();
   }
 
   render () {
     return (
       <div className="App">
-        <TextInput name="test" ref={this.positionRef} onChange={this.onInputChange}/>
-        <button onClick={this.getBrowserPosition}>click</button>
-        <BrowserPosition ref={this.refGetPosition}/>
+        <TextInput name="test" ref={this.positionRef} onChange={this.onInputChange} />
+        <button onClick={this.magic}>click</button>
+        <BrowserPosition ref={this.refBrowserPosition} />
+        <Weather ref={this.refWeather} />
         <div>{this.state.textInput}</div>
       </div>
     );

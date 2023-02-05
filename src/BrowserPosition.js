@@ -4,20 +4,7 @@ class BrowserPosition extends React.Component {
   state = {
     latitude: null,
     longitude: null,
-    error: null,
-  }
-
-  onSuccess = (pos) => {
-    this.setState({
-      latitude: pos.coords.latitude,
-      longitude: pos.coords.longitude,
-    })
-  }
-
-  onError = (err) => {
-    this.setState({
-      error: `Error ${err.code}: ${err.message}`,
-    })
+    error: "",
   }
 
   getPosition = () => {
@@ -28,7 +15,18 @@ class BrowserPosition extends React.Component {
       });
       return;
     }
-    geo.getCurrentPosition(this.onSuccess, this.onError);
+    geo.getCurrentPosition(
+      (pos) => {
+        this.setState({
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude,
+          error: "",
+        })},
+      (err) => {
+        this.setState({
+          error: `Error ${err.code}: ${err.message}`,
+        })}
+    );
   }
 
   componentDidMount = this.getPosition();
