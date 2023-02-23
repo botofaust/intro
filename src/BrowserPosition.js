@@ -36,7 +36,7 @@ class BrowserPosition extends React.Component {
       <div>
         lat: {this.state.latitude}<br />
         long: {this.state.longitude}<br />
-        error: {this.state.error}<br />
+        {this.state.error}
       </div>
     );
   }

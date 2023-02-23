@@ -19,10 +19,12 @@ class App extends Component {
     textInput: "",
   }
 
-  magic = () => {
+  setPosition = () => {
     const pos = this.refBrowserPosition.current.state;
-    console.log(pos);
     this.refWeather.current.setCoords({latitude: pos.latitude, longitude: pos.longitude});
+  }
+
+  callOpenWeather = () => {
     this.refWeather.current.callOpenWeather();
   }
   
@@ -34,7 +36,8 @@ class App extends Component {
     return (
       <div className="App">
         <TextInput name="test" ref={this.positionRef} onChange={this.onInputChange} />
-        <button onClick={this.magic}>click</button>
+        <button onClick={this.setPosition}>set pos</button>
+        <button onClick={this.callOpenWeather}>weather</button>
         <BrowserPosition ref={this.refBrowserPosition} />
         <Weather ref={this.refWeather} />
         <div>{this.state.textInput}</div>
